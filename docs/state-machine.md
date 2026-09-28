@@ -2,17 +2,13 @@
 
 ```mermaid
 stateDiagram-v2
-  DRAFT --> MANAGER_PENDING: SUBMIT
-  MANAGER_PENDING --> HR_PENDING: MANAGER_APPROVE
-  MANAGER_PENDING --> MANAGER_REJECTED: MANAGER_REJECT
-  MANAGER_PENDING --> MANAGER_ESCALATED: ESCALATE_MANAGER
-  MANAGER_ESCALATED --> HR_PENDING: MANAGER_APPROVE
-  MANAGER_ESCALATED --> MANAGER_REJECTED: MANAGER_REJECT
-  HR_PENDING --> APPROVED: HR_APPROVE
-  HR_PENDING --> HR_REJECTED: HR_REJECT
-  HR_PENDING --> HR_ESCALATED: ESCALATE_HR
-  HR_ESCALATED --> APPROVED: HR_APPROVE
-  HR_ESCALATED --> HR_REJECTED: HR_REJECT
+  PENDING_MANAGER --> PENDING_HR: MANAGER_APPROVE
+  PENDING_MANAGER --> REJECTED: MANAGER_REJECT
+  PENDING_MANAGER --> ESCALATED: Manager deadline expires
+  ESCALATED --> PENDING_HR: MANAGER_APPROVE
+  ESCALATED --> REJECTED: MANAGER_REJECT
+  PENDING_HR --> APPROVED: HR_APPROVE
+  PENDING_HR --> REJECTED: HR_REJECT
 ```
 
-Escalation changes visibility and creates an audit event; it never grants approval. Terminal states have no outgoing actions.
+Escalation changes visibility and creates an audit event; it never grants approval. Terminal states have no outgoing actions. The database stores a single `ESCALATED` status, matching the supplied schema.

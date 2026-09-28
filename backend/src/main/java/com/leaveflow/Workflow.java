@@ -1,5 +1,34 @@
 package com.leaveflow;
-import java.util.*;
-public final class Workflow { private Workflow(){} public enum State { DRAFT,SUBMITTED,MANAGER_PENDING,MANAGER_ESCALATED,HR_PENDING,HR_ESCALATED,APPROVED,MANAGER_REJECTED,HR_REJECTED,CANCELLED } public enum Event { SUBMIT,MANAGER_APPROVE,MANAGER_REJECT,HR_APPROVE,HR_REJECT,ESCALATE_MANAGER,ESCALATE_HR,CANCEL }
- private static final Map<State,Map<Event,State>> T=Map.of(State.DRAFT,Map.of(Event.SUBMIT,State.MANAGER_PENDING),State.MANAGER_PENDING,Map.of(Event.MANAGER_APPROVE,State.HR_PENDING,Event.MANAGER_REJECT,State.MANAGER_REJECTED,Event.ESCALATE_MANAGER,State.MANAGER_ESCALATED,Event.CANCEL,State.CANCELLED),State.MANAGER_ESCALATED,Map.of(Event.MANAGER_APPROVE,State.HR_PENDING,Event.MANAGER_REJECT,State.MANAGER_REJECTED,Event.CANCEL,State.CANCELLED),State.HR_PENDING,Map.of(Event.HR_APPROVE,State.APPROVED,Event.HR_REJECT,State.HR_REJECTED,Event.ESCALATE_HR,State.HR_ESCALATED,Event.CANCEL,State.CANCELLED),State.HR_ESCALATED,Map.of(Event.HR_APPROVE,State.APPROVED,Event.HR_REJECT,State.HR_REJECTED,Event.CANCEL,State.CANCELLED));
- public static State next(State s, Event e){State n=T.getOrDefault(s,Map.of()).get(e);if(n==null)throw new IllegalArgumentException("INVALID_STATE_TRANSITION: "+s+" cannot handle "+e);return n;} public static Set<Event> allowed(State s){return T.getOrDefault(s,Map.of()).keySet();}}
+
+import java.util.Map;
+import java.util.Set;
+
+public final class Workflow {
+    private Workflow() {}
+
+    public enum State { PENDING_MANAGER, PENDING_HR, APPROVED, REJECTED, ESCALATED }
+    public enum Event { MANAGER_APPROVE, MANAGER_REJECT, HR_APPROVE, HR_REJECT, ESCALATE_MANAGER }
+
+    private static final Map<State, Map<Event, State>> TRANSITIONS = Map.of(
+        State.PENDING_MANAGER, Map.of(
+            Event.MANAGER_APPROVE, State.PENDING_HR,
+            Event.MANAGER_REJECT, State.REJECTED,
+            Event.ESCALATE_MANAGER, State.ESCALATED),
+        State.ESCALATED, Map.of(
+            Event.MANAGER_APPROVE, State.PENDING_HR,
+            Event.MANAGER_REJECT, State.REJECTED),
+        State.PENDING_HR, Map.of(
+            Event.HR_APPROVE, State.APPROVED,
+            Event.HR_REJECT, State.REJECTED)
+    );
+
+    public static State next(State state, Event event) {
+        State next = TRANSITIONS.getOrDefault(state, Map.of()).get(event);
+        if (next == null) throw new IllegalArgumentException("INVALID_STATE_TRANSITION: " + state + " cannot handle " + event);
+        return next;
+    }
+
+    public static Set<Event> allowed(State state) {
+        return TRANSITIONS.getOrDefault(state, Map.of()).keySet();
+    }
+}

@@ -18,7 +18,7 @@ $env:SUPABASE_DB_USER='postgres.YOUR_PROJECT_REF'
 $env:SUPABASE_DB_PASSWORD='your database password'
 ```
 
-Flyway automatically applies `backend/src/main/resources/db/migration/V1__baseline.sql` on first backend startup. The migration creates the normalized tables and safe demo seed data.
+Flyway applies the versioned migrations in `backend/src/main/resources/db/migration/`. `V1` creates the original demo schema; `V2` migrates it to the `users`, `leave_balances`, `leave_requests`, and `team_leave_rules` schema, preserving existing requests and audit events and adding the sample records from the SQL in this project.
 
 ## Run
 
@@ -33,11 +33,11 @@ npm.cmd install
 npm.cmd run dev
 ```
 
-Demo user passwords in the seeded database: `demo123` for `employee@example.com`, `manager@example.com`, and `hr@example.com`.
+Demo passwords in the seeded database: `demo123` for the original demo accounts and `password123` for the added sample accounts (`chinmay@company.com`, `rahul@company.com`, `hr@company.com`, and others). Replace these demo credentials before using a real deployment.
 
 ## State machine
 
-`DRAFT → MANAGER_PENDING → HR_PENDING → APPROVED`, with explicit rejection, cancellation and escalation states. Escalation never approves a request; it only changes it to an escalation state and records a system audit event. See [the exact diagram](docs/state-machine.md).
+`PENDING_MANAGER → PENDING_HR → APPROVED`, with rejection and manager-deadline escalation. Escalation never approves a request; it only changes its status and records a system audit event. See [the exact diagram](docs/state-machine.md).
 
 ## Policies in this demo
 

@@ -1,7 +1,7 @@
 spring:
   datasource:
     # Paste the JDBC string obtained from Supabase Dashboard > Connect.
-    url: ${SUPABASE_DB_URL}
+    url: jdbc:postgresql://https://xmzauolgszdwlicpvvro.supabase.co
     username: ${SUPABASE_DB_USER}
     password: ${SUPABASE_DB_PASSWORD}
     hikari:

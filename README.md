@@ -2,6 +2,10 @@
 
 LeaveFlow is a Spring Boot + React leave-workflow demo. It makes the approval state machine, team-coverage impact, pro-rated balance, audit trail, and SLA escalation visible rather than treating leave as CRUD.
 
+# Architecture Diagram 
+
+<img width="1469" height="674" alt="image" src="https://github.com/user-attachments/assets/cc6e9105-353e-402b-915b-c76f4d481731" />
+
 ## Database: Supabase PostgreSQL
 
 The backend connects directly to Supabase PostgreSQL through JDBC; the browser never receives a database password or a Supabase service key. In Supabase Dashboard, open **Connect** and choose **Session pooler** for a typical Windows/IPv4 local backend, then copy the host, user, and password into a local `.env` based on `.env.example`. Keep `sslmode=require`.

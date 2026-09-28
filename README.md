@@ -1,4 +1,4 @@
-# LeaveFlow — Workforce Availability Intelligence
+# Accentra — Workforce Availability Intelligence
 
 LeaveFlow is a Spring Boot + React leave-workflow demo. It makes the approval state machine, team-coverage impact, pro-rated balance, audit trail, and SLA escalation visible rather than treating leave as CRUD.
 
